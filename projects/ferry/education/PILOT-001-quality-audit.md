@@ -39,9 +39,9 @@ updated_at: "2026-11-23"
 
 | ID | Title | Category | Severity | Confidence | Status |
 |---|---|---|---|---|---|
-| F-001 | `/privacy` "zero analytics" claim conflicts with planned Vercel Web Analytics | Compliance / Accuracy | High | High | Open |
-| F-002 | `useSeoSchema.ts` hardcodes `'1.3.3'` fallback `softwareVersion` | SEO | Low | High | Open |
-| F-003 | `privacy.vue` `localStorageRows` tuple carries unused `_purpose` field | Code Quality | Info | High | Open |
+| F-001 | `/privacy` "zero analytics" claim conflicts with planned Vercel Web Analytics | Compliance / Accuracy | High | High | Resolved (`1dda497`) |
+| F-002 | `useSeoSchema.ts` hardcodes `'1.3.3'` fallback `softwareVersion` | SEO | Low | High | Resolved (`1dda497`) |
+| F-003 | `privacy.vue` `localStorageRows` tuple carries unused `_purpose` field | Code Quality | Info | High | Resolved (`1dda497`) |
 | F-004 | Skip-link, `<main>` landmark, breadcrumb `<nav>`, and `sitemap.xml` are properly configured | Accessibility / SEO | Info | High | Verified |
 
 ### F-001: `/privacy` "zero analytics" claim conflicts with planned Vercel Web Analytics

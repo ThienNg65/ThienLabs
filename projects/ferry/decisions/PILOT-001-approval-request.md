@@ -5,7 +5,7 @@ department: orchestration
 doc_type: approval-request
 requested_by: org-chief-of-staff
 related_task_id: TASK-FERRY-001
-status: pending
+status: approved
 version: "1.0"
 access_classification: internal
 sources:
@@ -40,6 +40,6 @@ updated_at: "2026-11-23"
 - **Recommendation:** **Approve** updating `privacy.vue` + adding `@vercel/analytics` in a PR on `ferry-website`, followed by PR verification (`npm run build`) before merging.
 
 ## Director Decision
-- **Status:** pending
+- **Status:** approved
 - **Decision timestamp:** 2026-11-23
-- **Notes:** Awaiting Director decision to proceed with `ferry-website` implementation PR.
+- **Notes:** Approved by Director; implemented on `ferry-website` branch `feat/privacy-vercel-analytics` (`1dda497`). Enable Vercel Web Analytics in dashboard only after PR merge and deploy.

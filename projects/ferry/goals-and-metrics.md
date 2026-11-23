@@ -23,7 +23,7 @@ updated_at: "2026-11-23"
 - [x] 3. Structured cross-department collaboration using typed Task Briefs and Handoffs.
 - [x] 4. Multi-provider execution compatibility via provider-agnostic agent contracts.
 - [x] 5. GitHub workflows aligned with `ferry` (`main` protected, Conventional Commits, Release Please).
-- [ ] 6. Independent code/PR review before merge readiness. *(Pending `ferry-website` PR after Level 3 approval of `APR-FERRY-001`)*
+- [x] 6. Independent code/PR review before merge readiness. *(Verified on `ferry-website` branch `feat/privacy-vercel-analytics` at `1dda497`)*
 - [x] 7. Education-led quality/security audit using evidence-only reporting.
 - [x] 8. Human Director Level 3 approval gates on merges, releases, scope, and security changes.
 - [x] 9. Consolidated reporting back to Director.
