@@ -18,15 +18,15 @@ updated_at: "2026-11-23"
 
 ## Phase 1 MVP Validation Checklist (RFC #1 Sec 18)
 
-- [ ] 1. Chat-based delegation from Director → Chief of Staff → Ferry department leads.
-- [ ] 2. Project-specific knowledge isolation (`projects/ferry/` and `private-engineering` vs. `public-marketing` boundaries).
-- [ ] 3. Structured cross-department collaboration using typed Task Briefs and Handoffs.
-- [ ] 4. Multi-provider execution compatibility via provider-agnostic agent contracts.
-- [ ] 5. GitHub workflows aligned with `ferry` (`main` protected, Conventional Commits, Release Please).
-- [ ] 6. Independent code/PR review before merge readiness.
-- [ ] 7. Education-led quality/security audit using evidence-only reporting.
-- [ ] 8. Human Director Level 3 approval gates on merges, releases, scope, and security changes.
-- [ ] 9. Consolidated reporting back to Director.
+- [x] 1. Chat-based delegation from Director → Chief of Staff → Ferry department leads.
+- [x] 2. Project-specific knowledge isolation (`projects/ferry/` and `private-engineering` vs. `public-marketing` boundaries).
+- [x] 3. Structured cross-department collaboration using typed Task Briefs and Handoffs.
+- [x] 4. Multi-provider execution compatibility via provider-agnostic agent contracts.
+- [x] 5. GitHub workflows aligned with `ferry` (`main` protected, Conventional Commits, Release Please).
+- [ ] 6. Independent code/PR review before merge readiness. *(Pending `ferry-website` PR after Level 3 approval of `APR-FERRY-001`)*
+- [x] 7. Education-led quality/security audit using evidence-only reporting.
+- [x] 8. Human Director Level 3 approval gates on merges, releases, scope, and security changes.
+- [x] 9. Consolidated reporting back to Director.
 
 ## Product & Delivery Metrics
 
