@@ -1,0 +1,55 @@
+name: ThienLabs Health & Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ThienLabs
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --registry=https://registry.npmjs.org
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Validate contracts, links, and isolation rules
+        run: npm run validate
+
+  ferry-public-health:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check ferryssh.com/privacy and Vercel Insights script
+        run: |
+          curl -fsSL https://www.ferryssh.com/privacy | grep -q "Policy Version: 1.1"
+          curl -fsSI https://www.ferryssh.com/_vercel/insights/script.js | head -n 1
+
+      - name: Check latest public ferry-release tag
+        run: |
+          curl -fsSL https://api.github.com/repos/ThienNg65/ferry-release/releases/latest | node -e "
+            const d = JSON.parse(require('fs').readFileSync(0, 'utf8'));
+            const total = (d.assets || []).reduce((s, a) => s + (a.download_count || 0), 0);
+            console.log('Latest release:', d.tag_name, 'total downloads:', total);
+          "

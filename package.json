@@ -1,0 +1,23 @@
+{
+  "name": "thienlabs-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ThienLabs Phase 2-3 local CLI and provider-agnostic agent runtime",
+  "type": "module",
+  "bin": {
+    "thienlabs": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && node --test dist/test/*.test.js",
+    "validate": "npm run build && node dist/cli.js validate"
+  },
+  "dependencies": {
+    "yaml": "^2.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "typescript": "^5.8.0"
+  }
+}
