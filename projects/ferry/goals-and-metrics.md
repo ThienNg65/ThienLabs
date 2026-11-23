@@ -32,7 +32,7 @@ updated_at: "2026-11-23"
 
 | Metric | Baseline | Target | Measurement Method |
 |---|---|---|---|
-| Microsoft Store / GitHub Release adoption | TBD (capture from Store Partner Center + `gh release view`) | +25% per release cycle | Store Partner Center & `ferry-release` download stats |
-| Website conversion (`ferryssh.com` → Store/Release) | Not yet instrumented (Vercel Web Analytics to be enabled) | >5% CTR to Store/Release | Vercel Web Analytics (privacy-friendly) + Store/Release referral tracking |
+| Microsoft Store / GitHub Release adoption | **Store (`9PJPWK568P53`, 2026-11-23):** `10` page views / `0` installs (`2026-10-24`–`2026-11-20`); `9` page views / `2` installs in `48h` (`2026-11-21`–`2026-11-23`). **GitHub (`ferry-release`):** `ferry-v1.3.4` = `5` (`Setup`: 2, `Portable`: 1, `latest.yml`: 2); `v1.3.3` = `6`; `v1.3.2` = `11` | +25% per release cycle | Store Partner Center (`acquisitions`) & `ThienNg65/ferry-release` download stats |
+| Website conversion (`ferryssh.com` → Store/Release) | **Vercel Web Analytics (enabled 2026-11-23, ~41m post-deploy):** `1` visitor, `9` page views, `0%` bounce rate; **Speed Insights:** RES `100` (`10` desktop events); **Custom Events:** unavailable on Hobby plan (Pro required) | >5% CTR to Store/Release | Vercel Web Analytics (page views/visitors) + Store Partner Center & `ferry-release` referral/install tracking |
 | Automated test & typecheck pass rate on PRs | Current `main` CI green (100%) | 100% before merge | `npm run typecheck`, `npm test`, `npm run build` |
 | Escaped release defects | 0 open P0/P1 in `ferry-release` | 0 escaped P0/P1 per release | `ferry-release` issue tracking & retrospectives |
