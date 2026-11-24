@@ -39,6 +39,9 @@ jobs:
       - name: Validate contracts, links, isolation, and src DAG hygiene
         run: npm run validate
 
+      - name: Run isolated Ferry outer-loop simulation
+        run: npm run simulate -- --project ferry --json
+
       - name: Require statechart or verification artifact when orchestration changes
         if: github.event_name == 'pull_request'
         run: |
