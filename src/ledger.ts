@@ -40,7 +40,7 @@ export const ALLOWED_LEDGER_TRANSITIONS: Record<LedgerStatus | 'none', readonly 
   failed: ['dispatched', 'escalated'],
   paused_for_approval: ['approved', 'rejected'],
   completed: [],
-  approved: [],
+  approved: ['dispatched'],
   rejected: [],
   blocked: [],
   escalated: [],
