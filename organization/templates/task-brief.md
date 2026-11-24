@@ -44,8 +44,8 @@ target_date: YYYY-MM-DD
 
 ## Workflow Phase & Visibility
 - **Current phase:** `<intake|discovery|implementation|qa|director-approval|release>`
-- **GitHub title prefix:** `[FERRY:<PHASE>]`
-- Keep the current phase tag in the GitHub issue/PR title and mirror it with `phase:<phase>`.
+- **GitHub body metadata:** `Workflow phase: <phase>`
+- Mirror the current phase with the GitHub label `phase:<phase>`. For Ferry PRs, preserve Conventional Commit titles and do not add phase prefixes.
 
 ## Approval Gate
 - **Required level:** Level 1 (Independent) / Level 2 (Delegated) / Level 3 (Director Approval)
