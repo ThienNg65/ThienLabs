@@ -80,7 +80,7 @@ A plain `approved`, emoji reaction, approval from another account, approval on a
 
 1. GitHub verifies the comment/review author is the repository owner.
 2. The workflow verifies the exact APR ID and pending `approval:required` label.
-3. The workflow removes `approval:required`, adds `approval:approved` (or `approval:rejected`), and records an audit comment.
+3. The approval workflow is serialized per GitHub issue/PR, then removes `approval:required`, adds `approval:approved` (or `approval:rejected`), and records an audit comment.
 4. An idempotent `repository_dispatch` event named `thienlabs-director-decision` is emitted with the APR ID, task ID, decision, actor, target URL, and timestamp.
 5. `agent-event-bridge.yml` preserves the event as a 30-day artifact and forwards it to a configured ThienLabs agent runner.
 6. The task runner resumes only the task associated with that APR ID. Rejected tasks remain stopped.
