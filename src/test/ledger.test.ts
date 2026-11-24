@@ -112,7 +112,7 @@ describe('ledger circuit breakers & approval gates', () => {
       const aprText = fs.readFileSync(aprPath, 'utf8');
       assert.ok(aprText.includes('doc_id: APR-TASK-FERRY-999'));
       assert.ok(aprText.includes('npm test passed'));
-      assert.ok(aprText.includes('[FERRY:DIRECTOR-APPROVAL]'));
+      assert.ok(aprText.includes('workflow_phase: director-approval'));
       assert.ok(aprText.includes('[TL-APR:APR-TASK-FERRY-999]'));
       assert.ok(aprText.includes('/approve APR-TASK-FERRY-999'));
     } finally {
