@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 import {
@@ -34,7 +35,8 @@ Commands:
   complete --brief <path> --result <json-or-file>                   Record ExecutionResult, handoff, or Level 3 gate
   retry --brief <path> --failure-class <class> --summary <text>     Record classified retry or trip max_step_retries
   approve --task <id> --decision <approved|rejected> [--notes <t>]  Record Director decision on a paused Level 3 task
-  status [--project <id>] [--task <id>]                             Summarize latest task states from runtime/ledger.jsonl`);
+  status [--project <id>] [--task <id>]                             Summarize latest task states from runtime/ledger.jsonl
+  simulate [--project <id>] [--json]                                Run isolated end-to-end outer-loop multi-agent simulation`);
 }
 
 async function main(): Promise<void> {
@@ -258,6 +260,110 @@ async function main(): Promise<void> {
       latestByTask.set(ev.task_id, ev);
     }
     console.log(JSON.stringify(Array.from(latestByTask.values()), null, 2));
+    return;
+  }
+
+  if (command === 'simulate') {
+    const { values } = parseArgs({
+      args: rest,
+      options: {
+        project: { type: 'string', default: 'ferry' },
+        json: { type: 'boolean', default: false },
+      },
+    });
+    const projectId = values.project ?? 'ferry';
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'thienlabs-sim-'));
+    const scenarios: Array<{ name: string; status: 'pass' | 'fail'; details: string }> = [];
+
+    try {
+      fs.cpSync(path.join(rootDir, 'organization'), path.join(tmp, 'organization'), { recursive: true });
+      if (fs.existsSync(path.join(rootDir, 'docs'))) {
+        fs.cpSync(path.join(rootDir, 'docs'), path.join(tmp, 'docs'), { recursive: true });
+      }
+      fs.cpSync(path.join(rootDir, 'projects', projectId), path.join(tmp, 'projects', projectId), {
+        recursive: true,
+      });
+
+      // Scenario 1: Validate copied project & organization artifacts
+      const val = validateRepo(tmp);
+      scenarios.push({
+        name: 'repo-validation',
+        status: val.errors.length === 0 ? 'pass' : 'fail',
+        details: val.errors.length === 0 ? `Checked ${val.checkedFiles} files` : val.errors.join('; '),
+      });
+
+      // Scenario 2: Cross-department handoff -> retry -> Level 3 approval -> resume -> complete
+      const simTaskId = `TASK-${projectId.toUpperCase()}-SIM-001`;
+      const briefRel = `projects/${projectId}/product/${simTaskId}.md`;
+      fs.writeFileSync(
+        path.join(tmp, briefRel),
+        `---\ndoc_id: ${simTaskId}\nproject_id: ${projectId}\ndepartment: product\ndoc_type: task-brief\nowner: ${projectId}-prd-lead\ncreated_by: org-chief-of-staff\nparent_task_id: null\nstatus: active\npriority: medium\nhop_count: 1\nmax_hops: 4\napproval_stage: level-3\nworkflow_phase: implementation\naccess_classification: internal\nsources: []\n---\n# Outer-Loop Simulation Task\n`,
+        'utf8',
+      );
+      dispatchTask({ rootDir: tmp, briefPath: briefRel });
+      completeTask({
+        rootDir: tmp,
+        briefPath: briefRel,
+        result: {
+          status: 'handoff',
+          summary: 'Sim handoff to marketing',
+          evidence: [`projects/${projectId}/project-context.md`],
+          handoff: { to_agent: `${projectId}-mkt-lead`, reason: 'Verify public messaging', deliverables: ['copy.md'] },
+        },
+      });
+      const resumedHandoff = dispatchTask({ rootDir: tmp, briefPath: briefRel });
+      retryTask({ rootDir: tmp, briefPath: briefRel, failureClass: 'tool', summary: 'Transient sim retry' });
+      completeTask({
+        rootDir: tmp,
+        briefPath: briefRel,
+        result: {
+          status: 'needs_approval',
+          summary: 'Sim ready for Director sign-off',
+          evidence: ['npm test passed'],
+          approval_request: {
+            action_type: 'Release',
+            target: projectId,
+            reason: 'Outer-loop verification',
+            risks: 'None (isolated temp simulation)',
+            rollback_plan: 'Discard temp workspace',
+          },
+        },
+      });
+      approveTask({ rootDir: tmp, taskId: simTaskId, decision: 'approved', notes: 'Sim approved' });
+      dispatchTask({ rootDir: tmp, briefPath: briefRel });
+      const finalRes = completeTask({
+        rootDir: tmp,
+        briefPath: briefRel,
+        result: { status: 'completed', summary: 'Post-approval phase completed', evidence: ['npm test passed'] },
+      });
+      scenarios.push({
+        name: 'multi-dept-handoff-approval-lifecycle',
+        status: resumedHandoff.owner === `${projectId}-mkt-lead` && finalRes.status === 'completed' ? 'pass' : 'fail',
+        details: `resumedOwner=${resumedHandoff.owner}, finalStatus=${finalRes.status}`,
+      });
+
+      // Scenario 3: Context isolation & token budget check
+      const env = buildContext({
+        rootDir: tmp,
+        projectId,
+        agentId: `${projectId}-mkt-lead`,
+        briefSources: [`projects/${projectId}/development/lead.md`],
+        maxTotalChars: 4000,
+      });
+      const leaked = env.files.some((f) => f.path.replace(/\\/g, '/').includes('/development/'));
+      scenarios.push({
+        name: 'classification-isolation',
+        status: !leaked ? 'pass' : 'fail',
+        details: `loaded=${env.files.length}, skipped=${env.skipped.length}`,
+      });
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+
+    const ok = scenarios.every((s) => s.status === 'pass');
+    const report = { ok, project_id: projectId, timestamp: new Date().toISOString(), scenarios };
+    console.log(JSON.stringify(report, null, 2));
+    if (!ok) process.exitCode = 1;
     return;
   }
 

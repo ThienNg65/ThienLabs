@@ -32,6 +32,7 @@ Canonical reference for agents and operators interacting with the `thienlabs` ru
 | `retry` | Classify transient failure (`provider\|tool\|permission\|context\|ambiguity`) | `--brief`, `--failure-class`, `--summary` | Records `retried` or `escalated` at `retry_count >= 2` |
 | `approve` | Record Director decision on a paused Level 3 task | `--task`, `--decision`, `--notes` | Updates `APR-*.md` + appends `approved` / `rejected` |
 | `status` | Inspect latest task states in `runtime/ledger.jsonl` | `--project`, `--task` | JSON array of latest `LedgerEvent` per task |
+| `simulate` | Run isolated end-to-end outer-loop multi-agent simulation | `--project`, `--json` | JSON report `{ ok, scenarios[] }` (exit `0`/`1`) |
 
 ## GitHub Approval & Phase Automation
 

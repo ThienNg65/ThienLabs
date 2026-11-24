@@ -11,7 +11,8 @@
     "build": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && tsc",
     "typecheck": "tsc --noEmit",
     "test": "npm run build && node --test dist/test/*.test.js",
-    "validate": "npm run build && node dist/cli.js validate"
+    "validate": "npm run build && node dist/cli.js validate",
+    "simulate": "npm run build && node dist/cli.js simulate"
   },
   "dependencies": {
     "yaml": "^2.7.0"
