@@ -2,22 +2,39 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
-import { type ExecutionResult, assertTaskBrief } from './contracts.js';
+import {
+  FAILURE_CLASSES,
+  type FailureClass,
+  assertExecutionResult,
+  assertTaskBrief,
+} from './contracts.js';
 import { buildContext, initProject } from './context.js';
-import { approveTask, completeTask, dispatchTask } from './dispatch.js';
+import { approveTask, completeTask, dispatchTask, getLedgerPath, retryTask } from './dispatch.js';
+import { readLedger } from './ledger.js';
 import { parseMarkdownFile } from './parser.js';
 import { validateRepo } from './validate.js';
+
+function parsePositiveIntFlag(raw: string | undefined, fallback: number, flagName: string): number {
+  if (raw === undefined) return fallback;
+  const parsed = Number(raw);
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    throw new Error(`${flagName} must be a positive integer (received '${raw}')`);
+  }
+  return parsed;
+}
 
 function printUsage(): void {
   console.log(`Usage: thienlabs <command> [options]
 
 Commands:
-  validate                                            Validate YAML frontmatter, links, and isolation rules
-  build-context --project <id> --agent <agent_id>     Build authorized context envelope for an agent
-  init-project --id <id> --name <name> [--dry-run]    Scaffold a new project unit and register it
-  dispatch --brief <path> [--dry-run]                 Prepare authorized Antigravity prompt & log dispatch
-  complete --brief <path> --result <json-or-file>     Record ExecutionResult & trigger Level 3 gate if needed
-  approve --task <id> --decision <approved|rejected>  Record Director decision on a paused Level 3 task`);
+  validate [--json]                                                 Validate contracts, links, isolation, and src/ DAG
+  build-context --project <id> --agent <agent_id> [--max-chars <n>] Build authorized context envelope for an agent
+  init-project --id <id> --name <name> [--dry-run]                  Scaffold a new project unit and register it
+  dispatch --brief <path> [--dry-run]                               Prepare authorized Antigravity prompt & log dispatch
+  complete --brief <path> --result <json-or-file>                   Record ExecutionResult, handoff, or Level 3 gate
+  retry --brief <path> --failure-class <class> --summary <text>     Record classified retry or trip max_step_retries
+  approve --task <id> --decision <approved|rejected> [--notes <t>]  Record Director decision on a paused Level 3 task
+  status [--project <id>] [--task <id>]                             Summarize latest task states from runtime/ledger.jsonl`);
 }
 
 async function main(): Promise<void> {
@@ -30,7 +47,16 @@ async function main(): Promise<void> {
   const rootDir = process.cwd();
 
   if (command === 'validate') {
+    const { values } = parseArgs({
+      args: rest,
+      options: { json: { type: 'boolean', default: false } },
+    });
     const res = validateRepo(rootDir);
+    if (values.json) {
+      console.log(JSON.stringify(res, null, 2));
+      if (res.errors.length > 0) process.exitCode = 1;
+      return;
+    }
     if (res.errors.length > 0) {
       console.error(`Validation failed (${res.errors.length} errors across ${res.checkedFiles} files):`);
       for (const err of res.errors) console.error(`  - ${err}`);
@@ -49,6 +75,7 @@ async function main(): Promise<void> {
         agent: { type: 'string' },
         brief: { type: 'string' },
         'max-files': { type: 'string' },
+        'max-chars': { type: 'string' },
       },
     });
     if (!values.project || !values.agent) {
@@ -57,13 +84,15 @@ async function main(): Promise<void> {
     const briefSources = values.brief
       ? assertTaskBrief(parseMarkdownFile(path.resolve(rootDir, values.brief)).frontmatter ?? {}, values.brief).sources
       : [];
-    const maxFiles = values['max-files'] ? Number(values['max-files']) : 12;
+    const maxFiles = parsePositiveIntFlag(values['max-files'], 12, '--max-files');
+    const maxTotalChars = parsePositiveIntFlag(values['max-chars'], 48000, '--max-chars');
     const envelope = buildContext({
       rootDir,
       projectId: values.project,
       agentId: values.agent,
       briefSources,
       maxFiles,
+      maxTotalChars,
     });
     console.log(
       JSON.stringify(
@@ -142,13 +171,47 @@ async function main(): Promise<void> {
     const rawResult = fs.existsSync(path.resolve(rootDir, values.result))
       ? fs.readFileSync(path.resolve(rootDir, values.result), 'utf8')
       : values.result;
-    const parsedResult = JSON.parse(rawResult) as ExecutionResult;
+    const parsedResult = assertExecutionResult(JSON.parse(rawResult));
     const res = completeTask({
       rootDir,
       briefPath: values.brief,
       result: parsedResult,
     });
     console.log(JSON.stringify(res, null, 2));
+    return;
+  }
+
+  if (command === 'retry') {
+    const { values } = parseArgs({
+      args: rest,
+      options: {
+        brief: { type: 'string' },
+        'failure-class': { type: 'string' },
+        summary: { type: 'string' },
+      },
+    });
+    if (
+      !values.brief ||
+      !values['failure-class'] ||
+      !FAILURE_CLASSES.includes(values['failure-class'] as FailureClass) ||
+      !values.summary
+    ) {
+      throw new Error(
+        `retry requires --brief <path> --failure-class <${FAILURE_CLASSES.join('|')}> --summary <text>`,
+      );
+    }
+    console.log(
+      JSON.stringify(
+        retryTask({
+          rootDir,
+          briefPath: values.brief,
+          failureClass: values['failure-class'] as FailureClass,
+          summary: values.summary,
+        }),
+        null,
+        2,
+      ),
+    );
     return;
   }
 
@@ -176,6 +239,25 @@ async function main(): Promise<void> {
         2,
       ),
     );
+    return;
+  }
+
+  if (command === 'status') {
+    const { values } = parseArgs({
+      args: rest,
+      options: {
+        project: { type: 'string' },
+        task: { type: 'string' },
+      },
+    });
+    const events = readLedger(getLedgerPath(rootDir));
+    const latestByTask = new Map<string, (typeof events)[number]>();
+    for (const ev of events) {
+      if (values.project && ev.project_id !== values.project) continue;
+      if (values.task && ev.task_id !== values.task) continue;
+      latestByTask.set(ev.task_id, ev);
+    }
+    console.log(JSON.stringify(Array.from(latestByTask.values()), null, 2));
     return;
   }
 

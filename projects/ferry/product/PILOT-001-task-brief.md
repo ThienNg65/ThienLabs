@@ -6,7 +6,7 @@ doc_type: task-brief
 owner: ferry-prd-lead
 created_by: org-chief-of-staff
 parent_task_id: null
-status: active
+status: completed
 priority: high
 hop_count: 1
 max_hops: 4
@@ -43,7 +43,7 @@ Execute the Phase 1 live pilot validation on `ferry-website` (`https://www.ferry
 - [x] Typed Task Brief issued by Chief of Staff to Product Lead (`ferry-prd-lead`).
 - [x] Cross-department handoff to Marketing & Education (`PILOT-001-handoff-audit.md`).
 - [x] Independent evidence-only Education audit (`PILOT-001-quality-audit.md`).
-- [ ] Level 3 Director decision on `PILOT-001-approval-request.md` before applying `ferry-website` edits.
+- [x] Level 3 Director decision on `PILOT-001-approval-request.md` before applying `ferry-website` edits.
 
 ## Required Evidence
 - Exact file paths and line references in `C:/toys/ferry-dev/ferry-website`.

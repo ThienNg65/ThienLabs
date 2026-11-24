@@ -6,10 +6,10 @@ import { describe, it } from 'node:test';
 import type { TaskBrief } from '../contracts.js';
 import {
   CircuitBreakerError,
-  appendLedgerEvent,
   assertCanDispatch,
   emitApprovalRequest,
   readLedger,
+  recordLedgerTransition,
 } from '../ledger.js';
 
 const baseBrief: TaskBrief = {
@@ -70,8 +70,18 @@ describe('ledger circuit breakers & approval gates', () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'thienlabs-ldg-'));
     try {
       const ledgerPath = path.join(tmp, 'runtime', 'ledger.jsonl');
-      appendLedgerEvent(ledgerPath, {
+      recordLedgerTransition(ledgerPath, {
         timestamp: '2026-11-23T00:00:00Z',
+        task_id: 'TASK-FERRY-999',
+        project_id: 'ferry',
+        owner_agent: 'ferry-prd-lead',
+        provider: 'gemini',
+        hop_count: 1,
+        retry_count: 0,
+        status: 'dispatched',
+      });
+      recordLedgerTransition(ledgerPath, {
+        timestamp: '2026-11-23T00:01:00Z',
         task_id: 'TASK-FERRY-999',
         project_id: 'ferry',
         owner_agent: 'ferry-prd-lead',
@@ -81,7 +91,7 @@ describe('ledger circuit breakers & approval gates', () => {
         status: 'paused_for_approval',
       });
       const loaded = readLedger(ledgerPath);
-      assert.equal(loaded.length, 1);
+      assert.equal(loaded.length, 2);
 
       assert.throws(
         () => assertCanDispatch(loaded, baseBrief),

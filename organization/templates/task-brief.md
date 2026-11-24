@@ -39,6 +39,7 @@ target_date: YYYY-MM-DD
 
 ## Required Evidence
 - <Exact command outputs, file paths, or test results needed to mark complete>
+- **Orchestration / workflow changes:** Attach a Mermaid `stateDiagram-v2` diagram and `thienlabs validate` / `npm test` outputs.
 
 ## Approval Gate
 - **Required level:** Level 1 (Independent) / Level 2 (Delegated) / Level 3 (Director Approval)

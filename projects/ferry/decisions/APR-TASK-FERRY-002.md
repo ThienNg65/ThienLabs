@@ -22,7 +22,7 @@ updated_at: "2026-11-24"
 - **Reason:** Added /go/store and /go/download noindex redirect pages with a 250ms @vercel/analytics beacon delay and updated all Store CTAs and All releases links in ferry-website. Vitest (27/27) and Nuxt production build (18 routes prerendered) passed.
 
 ## Expected Impact & Risks
-- Requires Director review before proceeding.
+- Routes Store and GitHub Release CTA clicks through `/go/store` and `/go/download` (`noindex, nofollow`) so Vercel Hobby Web Analytics records outbound conversions. Risk: 250ms beacon delay before redirect; mitigated by preserving direct fallback URLs.
 
 ## Validation Evidence
 - C:/toys/ferry-dev/ferry-website/app/components/GoRedirect.vue
@@ -37,7 +37,7 @@ updated_at: "2026-11-24"
 - npm --prefix C:/toys/ferry-dev/ferry-website run build: 18 routes prerendered including /go/store and /go/download
 
 ## Rollback Plan
-- No external state modified; reject request to cancel.
+- Revert the `ferry-website` commit restoring direct Store/GitHub Release hrefs and deleting `app/pages/go/` and `GoRedirect.vue`.
 
 ## Alternatives & Recommendation
 - **Recommendation:** Review evidence and approve or reject via `thienlabs approve --task TASK-FERRY-002`.

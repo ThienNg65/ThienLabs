@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout ThienLabs
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js 22
         uses: actions/setup-node@v4
@@ -34,8 +36,19 @@ jobs:
       - name: Run unit tests
         run: npm test
 
-      - name: Validate contracts, links, and isolation rules
+      - name: Validate contracts, links, isolation, and src DAG hygiene
         run: npm run validate
+
+      - name: Require statechart or verification artifact when orchestration changes
+        if: github.event_name == 'pull_request'
+        run: |
+          CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          if echo "$CHANGED" | grep -Eq '^src/(dispatch|ledger)\.ts$'; then
+            if ! git diff origin/${{ github.base_ref }}...HEAD -- docs/ organization/ projects/ | grep -q 'stateDiagram-v2'; then
+              echo "::error::PR modifies src/dispatch.ts or src/ledger.ts without a Mermaid stateDiagram-v2 artifact in docs/, organization/, or projects/."
+              exit 1
+            fi
+          fi
 
   ferry-public-health:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'

@@ -22,7 +22,11 @@ updated_at: YYYY-MM-DD
 ## Systems Inspected & Commands Executed
 > List ONLY files actually read and commands actually executed.
 - **Files inspected:** `<path>`
-- **Commands executed:** `<command>` → `<observed result>`
+- **Commands executed:** `<command>` → `<observed result>` (include `thienlabs validate` / `npm test` for orchestration audits)
+
+## Statechart & Transition Verification (Workflow Changes)
+> Required when auditing `src/dispatch.ts`, `src/ledger.ts`, or multi-department workflows.
+- **Statechart (`stateDiagram-v2`):** <Attach or link verified state-transition diagram>
 
 ## Findings
 

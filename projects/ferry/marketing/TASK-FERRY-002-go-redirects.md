@@ -6,7 +6,7 @@ doc_type: task-brief
 owner: ferry-mkt-lead
 created_by: org-chief-of-staff
 parent_task_id: null
-status: active
+status: completed
 priority: high
 hop_count: 1
 max_hops: 4
@@ -42,10 +42,10 @@ Vercel Web Analytics on the Hobby plan does not support Custom Events (`@vercel/
   - **Given** `ferry-website` is built (`npm run build`) and tested (`npm test`), **When** changes are complete, **Then** build and all unit tests pass.
 
 ## Expected Deliverables & Acceptance Criteria
-- [ ] Redirect routes `/go/store` and `/go/download` implemented in `C:/toys/ferry-dev/ferry-website`.
-- [ ] Outbound Store and GitHub Download CTAs in `app/` updated to route through `/go/store` and `/go/download` (or documented if any must remain direct).
-- [ ] `npm run build` and `npm test` pass in `C:/toys/ferry-dev/ferry-website`.
-- [ ] Level 3 Director approval requested before committing/pushing/deploying `ferry-website`.
+- [x] Redirect routes `/go/store` and `/go/download` implemented in `C:/toys/ferry-dev/ferry-website`.
+- [x] Outbound Store and GitHub Download CTAs in `app/` updated to route through `/go/store` and `/go/download` (or documented if any must remain direct).
+- [x] `npm run build` and `npm test` pass in `C:/toys/ferry-dev/ferry-website`.
+- [x] Level 3 Director approval requested before committing/pushing/deploying `ferry-website`.
 
 ## Approval Gate
 - **Required level:** Level 3 (Director Approval) — required before committing/merging/deploying `ferry-website` changes.

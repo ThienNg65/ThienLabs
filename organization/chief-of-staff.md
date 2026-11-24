@@ -65,7 +65,7 @@ Serve as the single conversational interface for the **Director**, translating n
 
 ## Evidence & Approval Gates
 
+- Use the CLI runtime ([workflow-and-feature-map.md](../docs/workflow-and-feature-map.md)): `thienlabs dispatch` → `complete` → `approve` → `validate`.
 - Reject completion claims lacking observed tool/test output or cited file paths.
-- Check for duplicate tasks/issues before opening new work.
-- For any Level 3 action ([approval-policy.md](governance/approval-policy.md))—PR merge, release, material scope change, spending, security-sensitive change, destructive action—halt execution and present a completed [approval-request.md](templates/approval-request.md) to the Director.
+- Check `thienlabs status` for duplicate tasks/issues before opening new work.
 - Summarize multi-department outcomes using [consolidated-report.md](templates/consolidated-report.md).

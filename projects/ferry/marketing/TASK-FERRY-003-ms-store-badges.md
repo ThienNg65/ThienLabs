@@ -6,7 +6,7 @@ doc_type: task-brief
 owner: ferry-mkt-lead
 created_by: org-chief-of-staff
 parent_task_id: null
-status: active
+status: completed
 priority: medium
 hop_count: 1
 max_hops: 4
@@ -41,11 +41,11 @@ Integrate the official Microsoft Store web component badge (`<ms-store-badge pro
 - **README badge:** Add `<a href="https://get.microsoft.com/installer/download/9pjpwk568p53?referrer=appbadge" target="_self"><img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200" alt="Get it from Microsoft" /></a>` to `C:/toys/ferry-dev/ferry-release/README.md`.
 
 ## Expected Deliverables & Acceptance Criteria
-- [ ] `<ms-store-badge>` integrated and rendering in `DownloadPanel.vue` without Vue custom-element warnings.
-- [ ] Microsoft Store badge added to `C:/toys/ferry-dev/ferry-release/README.md`.
-- [ ] `npm test` and `npm run build` pass in `C:/toys/ferry-dev/ferry-website`.
-- [ ] Live browser check confirms `<ms-store-badge>` is present in `#download`.
-- [ ] Level 3 Director approval requested before committing/pushing.
+- [x] `<ms-store-badge>` integrated and rendering in `DownloadPanel.vue` without Vue custom-element warnings.
+- [x] Microsoft Store badge added to `C:/toys/ferry-dev/ferry-release/README.md`.
+- [x] `npm test` and `npm run build` pass in `C:/toys/ferry-dev/ferry-website`.
+- [x] Live browser check confirms `<ms-store-badge>` is present in `#download`.
+- [x] Level 3 Director approval requested before committing/pushing.
 
 ## Approval Gate
 - **Required level:** Level 3 (Director Approval) — required before committing/pushing `ferry-website` and `ferry-release` changes.

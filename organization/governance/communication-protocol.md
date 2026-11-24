@@ -23,7 +23,7 @@ updated_at: "2026-11-23"
 
 To prevent context bloat and semantic drift across agent transitions:
 
-1. **Synthesize before handoff:** Never dump raw multi-file search results or full transcripts into a handoff. Pass a concise synthesized brief + exact file paths, line ranges, or issue/decision IDs.
-2. **Typed handoff required:** Use [cross-department-handoff.md](../templates/cross-department-handoff.md) for cross-department transitions and [task-brief.md](../templates/task-brief.md) for delegated work.
-3. **Duplicate check first:** Before creating a new task or issue, search existing tasks, issues, and decisions in the project scope. Link duplicates to the canonical record.
+1. **Synthesize before handoff:** Never dump raw multi-file search results into a handoff. Pass a concise synthesized brief + exact file paths, line ranges, or issue/decision IDs (`thienlabs build-context` enforces token budgets).
+2. **Typed handoff required:** Use `thienlabs complete` (`status: "handoff"`) to emit a validated [cross-department-handoff.md](../templates/cross-department-handoff.md) artifact (`HND-*.md`) and enforce `max_handoff_hops: 4`.
+3. **Duplicate check first:** Check `thienlabs status` and existing project tasks/issues before opening new work.
 4. **Preserve contradictory evidence:** Never silently discard conflicting findings; record both positions with sources and escalate to leads if unresolved.

@@ -23,6 +23,6 @@ updated_at: "2026-11-23"
 
 ## Escalation Rules
 
-- Any Level 3 action must stop before execution and emit a completed `approval-request` document (based on [approval-request.md](../templates/approval-request.md)) with exact scope, risks, validation evidence, and rollback plan.
+- Any Level 3 action must stop before execution (`thienlabs complete` pauses to `paused_for_approval` and emits an `APR-*.md` artifact via [approval-request.md](../templates/approval-request.md)), requiring explicit Director sign-off (`thienlabs approve`).
 - Routine, reversible Level 1–2 work within an approved scope should proceed without bottlenecking the Director.
-- Approval of an upstream step (e.g., discovery or implementation) never auto-approves a downstream Level 3 step (e.g., merge or release).
+- Approval of an upstream step never auto-approves a downstream Level 3 step (`src/validate.ts` blocks `completed` Level 3 briefs lacking an `approved` `APR-*.md`).

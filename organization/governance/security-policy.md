@@ -26,12 +26,12 @@ updated_at: "2026-11-23"
 
 ## Deterministic Search & Retrieval Protocol
 
-When gathering context for a task, agents must follow this retrieval order:
+Context assembly is enforced programmatically by `thienlabs build-context` (`src/context.ts`) and verified by `thienlabs validate` (`src/validate.ts`):
 
-1. **Registry & context lookup:** Read [project-registry.md](../project-registry.md) and `projects/<project-id>/project-context.md` to confirm authorized paths and classification limits.
-2. **Authoritative index & frontmatter:** Check the project's active index/map (e.g., `PROJECT_MAP.md`, `PRODUCT.md`, `decisions/`) and YAML `status` / `supersedes` fields before scanning historical docs.
-3. **Scoped lexical search:** Search only within `projects/<project-id>/`, explicitly authorized project repositories, and shared `organization/` templates/policies.
-4. **Freshness check:** Ignore documents with `status: superseded` or `status: deprecated` except when auditing decision history.
+1. **Registry & context lookup:** [project-registry.md](../project-registry.md) → `projects/<project-id>/project-context.md`.
+2. **Authoritative index & frontmatter:** Check `PROJECT_MAP.md`, `PRODUCT.md`, `decisions/`, and YAML `status` / `supersedes` before scanning historical docs.
+3. **Scoped & bounded retrieval:** Search only within `projects/<project-id>/`, authorized project repos, and `organization/`, bounded by `permissions.read`, `access_classification`, and `maxTotalChars`.
+4. **Freshness check:** Documents with `status: superseded` or `deprecated` are excluded automatically except when auditing decision history.
 
 ## Prompt-Injection Boundary
 

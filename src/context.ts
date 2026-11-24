@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import {
@@ -36,26 +37,38 @@ function isPathInside(candidate: string, allowedPrefix: string, rootDir: string)
   return normCandidate === normPrefix || normCandidate.startsWith(normPrefix + path.sep);
 }
 
-export function findAgentContract(rootDir: string, projectId: string, agentId: string): AgentContract {
+export function listProjectAgents(rootDir: string, projectId: string): AgentContract[] {
   const candidates: string[] = [path.join(rootDir, 'organization', 'chief-of-staff.md')];
   const projectDir = path.join(rootDir, 'projects', projectId);
   if (fs.existsSync(projectDir)) {
     for (const entry of fs.readdirSync(projectDir, { withFileTypes: true })) {
-      if (entry.isDirectory()) {
-        const leadPath = path.join(projectDir, entry.name, 'lead.md');
-        if (fs.existsSync(leadPath)) candidates.push(leadPath);
+      if (!entry.isDirectory()) continue;
+      const deptDir = path.join(projectDir, entry.name);
+      for (const file of fs.readdirSync(deptDir, { withFileTypes: true })) {
+        if (file.isFile() && file.name.endsWith('.md')) {
+          candidates.push(path.join(deptDir, file.name));
+        }
       }
     }
   }
 
+  const agents: AgentContract[] = [];
   for (const filePath of candidates) {
     if (!fs.existsSync(filePath)) continue;
     const parsed = parseMarkdownFile(filePath);
-    if (parsed.frontmatter && parsed.frontmatter.agent_id === agentId) {
-      return assertAgentContract(parsed.frontmatter, filePath);
+    if (parsed.frontmatter && typeof parsed.frontmatter.agent_id === 'string') {
+      agents.push(assertAgentContract(parsed.frontmatter, filePath));
     }
   }
-  throw new Error(`Agent contract not found for agent_id='${agentId}' in project '${projectId}'`);
+  return agents;
+}
+
+export function findAgentContract(rootDir: string, projectId: string, agentId: string): AgentContract {
+  const match = listProjectAgents(rootDir, projectId).find((a) => a.agent_id === agentId);
+  if (!match) {
+    throw new Error(`Agent contract not found for agent_id='${agentId}' in project '${projectId}'`);
+  }
+  return match;
 }
 
 export function buildContext(options: {
@@ -64,8 +77,9 @@ export function buildContext(options: {
   agentId: string;
   briefSources?: string[];
   maxFiles?: number;
+  maxTotalChars?: number;
 }): ContextEnvelope {
-  const { rootDir, projectId, agentId, briefSources = [], maxFiles = 12 } = options;
+  const { rootDir, projectId, agentId, briefSources = [], maxFiles = 12, maxTotalChars = 48000 } = options;
 
   const registry = parseProjectRegistry(rootDir);
   const project = registry.find((p) => p.project_id === projectId);
@@ -105,6 +119,9 @@ export function buildContext(options: {
   const seen = new Set<string>();
   const files: ContextFile[] = [];
   const skipped: Array<{ path: string; reason: string }> = [];
+  const projectsRoot = path.join(rootDir, 'projects');
+  const ownProjectRoot = path.join(projectsRoot, projectId);
+  let totalChars = 0;
 
   for (const candidate of rawCandidates) {
     if (files.length >= maxFiles) break;
@@ -115,6 +132,12 @@ export function buildContext(options: {
 
     if (!fs.existsSync(resolved)) {
       skipped.push({ path: resolved, reason: 'missing' });
+      continue;
+    }
+
+    // 0. Enforce strict cross-project boundary
+    if (isPathInside(resolved, projectsRoot, rootDir) && !isPathInside(resolved, ownProjectRoot, rootDir)) {
+      skipped.push({ path: resolved, reason: 'blocked:cross_project' });
       continue;
     }
 
@@ -147,30 +170,42 @@ export function buildContext(options: {
         }
         const fmClass = parsed.frontmatter.access_classification;
         if (isClassificationTier(fmClass)) {
-          if (classificationRank(fmClass) > agentRank) {
-            skipped.push({
-              path: resolved,
-              reason: `blocked:classification (${fmClass} > ${agent.access_classification})`,
-            });
-            continue;
-          }
           fileClass = fmClass;
         }
       }
     }
 
+    // Enforce classification ceiling unconditionally for both Markdown and non-Markdown files
+    if (isClassificationTier(fileClass) && classificationRank(fileClass) > agentRank) {
+      skipped.push({
+        path: resolved,
+        reason: `blocked:classification (${fileClass} > ${agent.access_classification})`,
+      });
+      continue;
+    }
+
     const content = fs.readFileSync(resolved, 'utf8');
+    if (totalChars + content.length > maxTotalChars) {
+      skipped.push({ path: resolved, reason: 'skipped:token_budget' });
+      continue;
+    }
+    totalChars += content.length;
     files.push({ path: resolved, classification: fileClass, content });
   }
 
   return { project, agent, files, skipped };
 }
 
+/** Formats authorized context files inside non-spoofable untrusted-data boundaries. */
 export function formatContextEnvelope(envelope: ContextEnvelope): string {
-  const sections = envelope.files.map(
-    (f) =>
-      `=== BEGIN UNTRUSTED CONTEXT DATA (${f.path} | ${f.classification}) ===\n${f.content}\n=== END UNTRUSTED CONTEXT DATA ===`,
-  );
+  const nonce = crypto.randomBytes(6).toString('hex');
+  const sections = envelope.files.map((f) => {
+    const safeContent = f.content.replace(
+      /===\s*(BEGIN|END)\s+UNTRUSTED CONTEXT DATA/gi,
+      '=== [ESCAPED $1 UNTRUSTED CONTEXT DATA]',
+    );
+    return `=== BEGIN UNTRUSTED CONTEXT DATA [${nonce}] (${f.path} | ${f.classification}) ===\n${safeContent}\n=== END UNTRUSTED CONTEXT DATA [${nonce}] ===`;
+  });
   return sections.join('\n\n');
 }
 

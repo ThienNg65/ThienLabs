@@ -22,7 +22,7 @@ updated_at: "2026-11-24"
 - **Reason:** Integrated <ms-store-badge productid="9pjpwk568p53" language="en-us"> into ferry-website DownloadPanel.vue (with custom element compiler config in nuxt.config.ts) while preserving /go/store CTA tracking, and added the Microsoft Store app badge to ferry-release/README.md. Vitest (27/27), Nuxt build (18 routes), and live browser check passed.
 
 ## Expected Impact & Risks
-- Requires Director review before proceeding.
+- Adds official Microsoft Store web component badge (`<ms-store-badge>`) on `ferry-website` and Store app badge in `ferry-release/README.md`. Risk: external script dependency on `get.microsoft.com`; mitigated by keeping primary `/go/store` CTA buttons intact.
 
 ## Validation Evidence
 - C:/toys/ferry-dev/ferry-website/nuxt.config.ts
@@ -33,7 +33,7 @@ updated_at: "2026-11-24"
 - Live browser check on http://127.0.0.1:3099/#download: <ms-store-badge> rendered at 380.53x104px, ms-store-badge.bundled.js HTTP 200, primary Store buttons retain href=/go/store
 
 ## Rollback Plan
-- No external state modified; reject request to cancel.
+- Revert the `ferry-website` and `ferry-release` commits removing `<ms-store-badge>` and the README badge.
 
 ## Alternatives & Recommendation
 - **Recommendation:** Review evidence and approve or reject via `thienlabs approve --task TASK-FERRY-003`.
