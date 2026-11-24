@@ -231,7 +231,6 @@ export function emitApprovalRequest(options: {
   const { rootDir, brief, agentId, result } = options;
   const today = new Date().toISOString().slice(0, 10);
   const aprId = `APR-${brief.doc_id}`;
-  const phaseTag = '[FERRY:DIRECTOR-APPROVAL]';
   const approvalTag = `[TL-APR:${aprId}]`;
   const taskPhase = brief.workflow_phase ?? 'implementation';
   const outPath = path.join(rootDir, 'projects', brief.project_id, 'decisions', `${aprId}.md`);
@@ -256,7 +255,7 @@ related_task_id: ${brief.doc_id}
 status: pending
 workflow_phase: director-approval
 origin_phase: ${taskPhase}
-github_title_marker: "${approvalTag}"
+github_approval_marker: "${approvalTag}"
 required_labels:
   - phase:director-approval
   - approval:required
@@ -288,8 +287,11 @@ ${evidenceLines}
 - **Recommendation:** Review evidence and approve or reject via \`thienlabs approve --task ${brief.doc_id}\`.
 
 ## GitHub Approval Controls
-- **PR/issue title tags:** ${phaseTag} ${approvalTag}
+- **Workflow phase:** director-approval
+- **Approval ID:** ${aprId}
+- **Approval marker:** ${approvalTag}
 - **Required labels:** phase:director-approval, approval:required
+- **PR title:** Keep the repository's Conventional Commit format; place approval metadata in the PR body, not the title.
 - **Approve comment:** /approve ${aprId} or APPROVED: ${aprId}
 - **Reject comment:** /reject ${aprId} or REJECTED: ${aprId}
 - A GitHub APPROVED review counts only when submitted by the repository owner on this exact tagged item while approval:required is present.
