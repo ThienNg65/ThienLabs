@@ -38,7 +38,7 @@ Canonical reference for agents and operators interacting with the `thienlabs` ru
 
 | Workflow | Trigger | Outcome |
 |---|---|---|
-| `phase-tags.yml` | Issue/PR opened, edited, reopened, synchronized | Converts Workflow phase body metadata or optional `[FERRY:<PHASE>]` issue tags into `phase:<phase>` labels; APR marker adds `approval:required` |
+| `phase-tags.yml` | Issue/PR opened, edited, reopened, synchronized | Converts Workflow phase body metadata or optional `[FERRY:<PHASE>]` issue tags into `phase:<phase>` labels; missing phase defaults to `phase:intake`; APR marker adds `approval:required` |
 | `director-approval.yml` | Director comment or submitted PR review | Verifies repository-owner identity, exact APR ID, and pending label; records decision and emits a `repository_dispatch` event |
 | `agent-event-bridge.yml` | `repository_dispatch` for a task or Director decision | Uploads a durable event manifest and forwards to the configured agent runner; otherwise leaves it queued |
 | `ferry-daily-audit.yml` | Daily at 08:00 Asia/Ho_Chi_Minh or manual dispatch | Creates/reuses a repository-wide Ferry audit issue and dispatches a task event |
