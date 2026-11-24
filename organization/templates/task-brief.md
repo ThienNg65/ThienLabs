@@ -11,6 +11,7 @@ priority: medium
 hop_count: 0
 max_hops: 4
 approval_stage: level-1
+workflow_phase: intake # intake | discovery | implementation | qa | director-approval | release
 version: "1.0"
 access_classification: internal
 sources: []
@@ -41,5 +42,11 @@ target_date: YYYY-MM-DD
 - <Exact command outputs, file paths, or test results needed to mark complete>
 - **Orchestration / workflow changes:** Attach a Mermaid `stateDiagram-v2` diagram and `thienlabs validate` / `npm test` outputs.
 
+## Workflow Phase & Visibility
+- **Current phase:** `<intake|discovery|implementation|qa|director-approval|release>`
+- **GitHub title prefix:** `[FERRY:<PHASE>]`
+- Keep the current phase tag in the GitHub issue/PR title and mirror it with `phase:<phase>`.
+
 ## Approval Gate
 - **Required level:** Level 1 (Independent) / Level 2 (Delegated) / Level 3 (Director Approval)
+- For Level 3, create the exact `APR-<TASK-ID>` marker and require `approval:required` before waiting.
