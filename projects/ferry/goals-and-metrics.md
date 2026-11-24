@@ -5,13 +5,14 @@ department: orchestration
 doc_type: goals-and-metrics
 owner: chief-of-staff
 status: active
-version: "1.0"
+version: "1.1"
 access_classification: internal
 sources:
   - https://github.com/ThienNg65/ThienLabs/issues/1#section-18
+  - https://api.github.com/repos/ThienNg65/ferry-release/releases
 supersedes: null
 created_at: "2026-11-23"
-updated_at: "2026-11-23"
+updated_at: "2026-11-24"
 ---
 
 # Ferry Pilot Goals & Validation Metrics
@@ -32,7 +33,7 @@ updated_at: "2026-11-23"
 
 | Metric | Baseline | Target | Measurement Method |
 |---|---|---|---|
-| Microsoft Store / GitHub Release adoption | **Store (`9PJPWK568P53`, 2026-11-23):** `10` page views / `0` installs (`2026-10-24`–`2026-11-20`); `9` page views / `2` installs in `48h` (`2026-11-21`–`2026-11-23`). **GitHub (`ferry-release`):** `ferry-v1.3.4` = `5` (`Setup`: 2, `Portable`: 1, `latest.yml`: 2); `v1.3.3` = `6`; `v1.3.2` = `11` | +25% per release cycle | Store Partner Center (`acquisitions`) & `ThienNg65/ferry-release` download stats |
-| Website conversion (`ferryssh.com` → Store/Release) | **Vercel Web Analytics (enabled 2026-11-23, ~41m post-deploy):** `1` visitor, `9` page views, `0%` bounce rate; **Speed Insights:** RES `100` (`10` desktop events); **Custom Events:** unavailable on Hobby plan (Pro required) | >5% CTR to Store/Release | Vercel Web Analytics (page views/visitors) + Store Partner Center & `ferry-release` referral/install tracking |
+| Microsoft Store / GitHub Release adoption | **Store (`9PJPWK568P53`, 2026-11-23 baseline):** `10` page views / `0` installs (`2026-10-24`–`2026-11-20`); `9` page views / `2` installs in `48h` (`2026-11-21`–`2026-11-23`); **2026-11-24 Store Partner Center update:** `[NEEDS DIRECTOR INPUT]`. **GitHub (`ferry-release`, observed 2026-11-24T15:41Z):** `ferry-v1.4.0` (published `2026-11-24T11:24:51Z`) = `4` (`Setup`: 1, `Portable`: 2, `latest.yml`: 1); `ferry-v1.3.4` = `19` (`Setup`: 12, `Portable`: 5, `latest.yml`: 2; up from `5`); `v1.3.3` = `6` (`Setup`: 3, `Portable`: 1, `latest.yml`: 2); `v1.3.2` = `11` (`Setup`: 6, `Portable`: 1, `latest.yml`: 4) | +25% per release cycle | Store Partner Center (`acquisitions`) & `ThienNg65/ferry-release` download stats |
+| Website conversion (`ferryssh.com` → Store/Release) | **Vercel Web Analytics (2026-11-23 baseline, ~41m post-deploy):** `1` visitor, `9` page views, `0%` bounce rate; **Speed Insights:** RES `100` (`10` desktop events); **Custom Events:** unavailable on Hobby plan (Pro required); **2026-11-24 Vercel Web Analytics & `/go/*` route hits:** `[NEEDS DIRECTOR INPUT]` | >5% CTR to Store/Release | Vercel Web Analytics (page views/visitors) + Store Partner Center & `ferry-release` referral/install tracking |
 | Automated test & typecheck pass rate on PRs | Current `main` CI green (100%) | 100% before merge | `npm run typecheck`, `npm test`, `npm run build` |
 | Escaped release defects | 0 open P0/P1 in `ferry-release` | 0 escaped P0/P1 per release | `ferry-release` issue tracking & retrospectives |
