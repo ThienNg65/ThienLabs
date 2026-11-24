@@ -287,6 +287,7 @@ ${evidenceLines}
 - **Recommendation:** Review evidence and approve or reject via \`thienlabs approve --task ${brief.doc_id}\`.
 
 ## GitHub Approval Controls
+- **Visible phase marker:** [FERRY:DIRECTOR-APPROVAL] (GitHub label: phase:director-approval)
 - **Workflow phase:** director-approval
 - **Approval ID:** ${aprId}
 - **Approval marker:** ${approvalTag}
