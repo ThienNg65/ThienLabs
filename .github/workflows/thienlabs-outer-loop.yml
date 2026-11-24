@@ -32,7 +32,9 @@ jobs:
           npm run validate
 
       - name: Run isolated Ferry outer-loop simulation
-        run: node dist/cli.js simulate --project ferry --json | tee simulation-report.json
+        run: |
+          set -o pipefail
+          node dist/cli.js simulate --project ferry --json | tee simulation-report.json
 
       - name: Upload simulation artifact
         if: always()
@@ -46,6 +48,17 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            try {
+              await github.rest.issues.createLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: 'outer-loop-regression',
+                color: 'B60205',
+                description: 'The isolated ThienLabs multi-agent simulation failed.',
+              });
+            } catch (error) {
+              if (error.status !== 422) throw error;
+            }
             const { data: openIssues } = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
