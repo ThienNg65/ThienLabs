@@ -38,7 +38,7 @@ Every issue/PR body should include:
 - Workflow phase: `implementation` (replace with the current phase)
 - Approval ID: `N/A` (or the exact `APR-<TASK-ID>` when approval is required)
 
-The phase-label workflow mirrors that metadata to the matching GitHub label. It also supports an optional `[FERRY:QA]` tag in issue titles, but PR titles must not be changed.
+The phase-label workflow mirrors that metadata to the matching GitHub label. If no phase is supplied, it defaults the item to `phase:intake`; update the body metadata as work advances. It also supports an optional `[FERRY:QA]` tag in issue titles, but PR titles must not be changed.
 
 ## 2. Director approval marker
 
