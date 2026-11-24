@@ -33,6 +33,16 @@ Canonical reference for agents and operators interacting with the `thienlabs` ru
 | `approve` | Record Director decision on a paused Level 3 task | `--task`, `--decision`, `--notes` | Updates `APR-*.md` + appends `approved` / `rejected` |
 | `status` | Inspect latest task states in `runtime/ledger.jsonl` | `--project`, `--task` | JSON array of latest `LedgerEvent` per task |
 
+## GitHub Approval & Phase Automation
+
+| Workflow | Trigger | Outcome |
+|---|---|---|
+| `phase-tags.yml` | Issue/PR opened, edited, reopened | Mirrors `[FERRY:<PHASE>]` title tags into `phase:<phase>` labels; `[TL-APR:APR-...]` adds `approval:required` |
+| `director-approval.yml` | Director comment or submitted PR review | Checks Director identity + exact APR ID, records approved/rejected labels, emits `repository_dispatch` event `thienlabs-director-decision` |
+| `approved-task-continuation.yml` | `repository_dispatch: thienlabs-director-decision` | Verifies the event, stores a continuation manifest, and leaves an auditable resumable queue marker |
+
+**Comment commands:** `/approve APR-<TASK-ID>`, `APPROVED: APR-<TASK-ID>`, `/reject APR-<TASK-ID>`, `REJECTED: APR-<TASK-ID>`. Plain `approved` is deliberately insufficient.
+
 ## Canonical Task & Approval Statechart
 
 ```mermaid
@@ -55,11 +65,11 @@ stateDiagram-v2
     retried --> retried : "retry (< 2)"
     retried --> escalated : "retries >= 2"
 
-    paused_for_approval --> approved : "thienlabs approve --decision approved"
-    paused_for_approval --> rejected : "thienlabs approve --decision rejected"
+    paused_for_approval --> approved : "thienlabs approve / Director GitHub signature"
+    paused_for_approval --> rejected : "thienlabs reject / Director GitHub signature"
 
+    approved --> dispatched : "resume next phase after approval"
     completed --> [*]
-    approved --> [*]
     rejected --> [*]
     blocked --> [*]
     escalated --> [*]
