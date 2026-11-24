@@ -58,6 +58,16 @@ export type TaskPriority = (typeof TASK_PRIORITIES)[number];
 export const APPROVAL_STAGES = ['level-1', 'level-2', 'level-3'] as const;
 export type ApprovalStage = (typeof APPROVAL_STAGES)[number];
 
+export const WORKFLOW_PHASES = [
+  'intake',
+  'discovery',
+  'implementation',
+  'qa',
+  'director-approval',
+  'release',
+] as const;
+export type WorkflowPhase = (typeof WORKFLOW_PHASES)[number];
+
 export const FAILURE_CLASSES = ['provider', 'tool', 'permission', 'context', 'ambiguity'] as const;
 export type FailureClass = (typeof FAILURE_CLASSES)[number];
 
@@ -104,6 +114,7 @@ export interface TaskBrief {
   hop_count: number;
   max_hops: number;
   approval_stage: ApprovalStage;
+  workflow_phase?: WorkflowPhase;
   version?: string;
   access_classification: ClassificationTier;
   sources: string[];
@@ -323,6 +334,10 @@ export function assertTaskBrief(data: Record<string, unknown>, filePath: string)
   const status = requireEnum(data.status, ARTIFACT_STATUSES, 'status', filePath);
   const priority = requireEnum(data.priority, TASK_PRIORITIES, 'priority', filePath);
   const approvalStage = requireEnum(data.approval_stage, APPROVAL_STAGES, 'approval_stage', filePath);
+  const workflowPhase =
+    data.workflow_phase === undefined
+      ? undefined
+      : requireEnum(data.workflow_phase, WORKFLOW_PHASES, 'workflow_phase', filePath);
   if (!isClassificationTier(data.access_classification)) {
     throw new Error(`${filePath}: invalid access_classification '${String(data.access_classification)}'`);
   }
@@ -345,6 +360,7 @@ export function assertTaskBrief(data: Record<string, unknown>, filePath: string)
     hop_count: hopCount,
     max_hops: maxHops,
     approval_stage: approvalStage,
+    workflow_phase: workflowPhase,
     version: typeof data.version === 'string' ? data.version : undefined,
     access_classification: data.access_classification,
     sources: Array.isArray(data.sources) ? data.sources.map(String) : [],
