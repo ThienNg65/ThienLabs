@@ -8,7 +8,7 @@ related_task_id: <TASK-ID>
 status: pending
 workflow_phase: director-approval
 origin_phase: <intake|discovery|implementation|qa|release>
-github_title_marker: "[TL-APR:APR-<TASK-ID>]"
+github_approval_marker: "[TL-APR:APR-<TASK-ID>]"
 required_labels:
   - phase:director-approval
   - approval:required
@@ -40,7 +40,8 @@ updated_at: YYYY-MM-DD
 - **Recommendation:** <Approve / Defer / Alternative>
 
 ## GitHub Approval Controls
-- **PR/issue title format:** `[FERRY:DIRECTOR-APPROVAL] [TL-APR:APR-<TASK-ID>] <summary>`
+- **PR/issue body metadata:** Workflow phase: director-approval; Approval ID: APR-<TASK-ID>; Approval marker: [TL-APR:APR-<TASK-ID>].
+- **PR title:** Preserve Conventional Commit format; do not prepend workflow tags.
 - **Required labels:** `phase:director-approval`, `approval:required`
 - **Approve:** comment `/approve APR-<TASK-ID>` or `APPROVED: APR-<TASK-ID>`
 - **Reject:** comment `/reject APR-<TASK-ID>` or `REJECTED: APR-<TASK-ID>`
