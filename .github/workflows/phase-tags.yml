@@ -10,6 +10,10 @@ permissions:
   issues: write
   pull-requests: write
 
+concurrency:
+  group: github-work-item-${{ github.repository }}-${{ github.event.issue.number || github.event.pull_request.number }}
+  cancel-in-progress: false
+
 jobs:
   sync-phase:
     runs-on: ubuntu-latest
@@ -23,13 +27,9 @@ jobs:
             const allowed = ["intake", "discovery", "implementation", "qa", "director-approval", "release"];
             const explicitTag = source.match(/\[FERRY:([A-Z-]+)\]/i);
             const bodyPhase = source.match(/workflow[_ ]phase\s*:\s*([a-z-]+)/i);
-            const phase = (explicitTag ? explicitTag[1] : bodyPhase ? bodyPhase[1] : "").toLowerCase();
+            const phase = (explicitTag ? explicitTag[1] : bodyPhase ? bodyPhase[1] : "intake").toLowerCase();
             const approvalMatch = source.match(/(?:approval id|tl-apr)\s*:\s*\[?(APR-[A-Z0-9-]+)\]?/i);
 
-            if (!phase && !approvalMatch) {
-              core.notice("No ThienLabs workflow phase metadata found; leaving labels unchanged.");
-              return;
-            }
             if (phase && !allowed.includes(phase)) {
               core.setFailed("Unknown workflow phase: " + phase);
               return;
