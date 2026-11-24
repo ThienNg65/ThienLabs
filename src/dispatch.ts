@@ -92,11 +92,17 @@ export function dispatchTask(options: {
     const events = readLedger(ledgerPath);
     const latest = getLatestTaskState(events, brief.doc_id);
     const isHandoffResume = latest?.status === 'handoff';
-    const activeOwnerId = isHandoffResume && latest.handoff_to ? latest.handoff_to : brief.owner;
-    const effectiveHopCount = isHandoffResume ? latest.hop_count : brief.hop_count;
+    const isApprovalResume = latest?.status === 'approved';
+    const activeOwnerId =
+      isHandoffResume && latest.handoff_to
+        ? latest.handoff_to
+        : isApprovalResume
+          ? latest.owner_agent
+          : brief.owner;
+    const effectiveHopCount = isHandoffResume || isApprovalResume ? latest.hop_count : brief.hop_count;
 
     const agent = findAgentContract(rootDir, brief.project_id, activeOwnerId);
-    if (!isHandoffResume && agent.department !== brief.department && agent.department !== 'orchestration') {
+    if (!isHandoffResume && !isApprovalResume && agent.department !== brief.department && agent.department !== 'orchestration') {
       throw new Error(
         `${briefPath}: owner '${agent.agent_id}' belongs to '${agent.department}', not '${brief.department}'`,
       );
@@ -259,8 +265,18 @@ export function completeTask(options: {
       return { status: 'handoff', handoffFile };
     }
 
+    const taskEvents = events.filter((e) => e.task_id === brief.doc_id);
+    const prevEvent = taskEvents.length >= 2 ? taskEvents[taskEvents.length - 2] : undefined;
+    const resumedAfterApproval =
+      prevEvent?.status === 'approved' ||
+      (latest.status === 'retried' &&
+        taskEvents.some((e) => e.status === 'approved') &&
+        taskEvents.findLastIndex((e) => e.status === 'approved') >
+          taskEvents.findLastIndex((e) => e.status === 'paused_for_approval'));
+
     const needsApproval =
-      brief.approval_stage === 'level-3' || result.status === 'needs_approval';
+      result.status === 'needs_approval' ||
+      (brief.approval_stage === 'level-3' && !resumedAfterApproval);
     let approvalFile: string | undefined;
     if (needsApproval) {
       approvalFile = emitApprovalRequest({

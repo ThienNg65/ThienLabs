@@ -40,7 +40,7 @@ export const ALLOWED_LEDGER_TRANSITIONS: Record<LedgerStatus | 'none', readonly 
   failed: ['dispatched', 'escalated'],
   paused_for_approval: ['approved', 'rejected'],
   completed: [],
-  approved: [],
+  approved: ['dispatched'],
   rejected: [],
   blocked: [],
   escalated: [],
@@ -231,6 +231,8 @@ export function emitApprovalRequest(options: {
   const { rootDir, brief, agentId, result } = options;
   const today = new Date().toISOString().slice(0, 10);
   const aprId = `APR-${brief.doc_id}`;
+  const approvalTag = `[TL-APR:${aprId}]`;
+  const taskPhase = brief.workflow_phase ?? 'implementation';
   const outPath = path.join(rootDir, 'projects', brief.project_id, 'decisions', `${aprId}.md`);
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
 
@@ -251,6 +253,12 @@ doc_type: approval-request
 requested_by: ${agentId}
 related_task_id: ${brief.doc_id}
 status: pending
+workflow_phase: director-approval
+origin_phase: ${taskPhase}
+github_approval_marker: "${approvalTag}"
+required_labels:
+  - phase:director-approval
+  - approval:required
 version: "1.0"
 access_classification: ${brief.access_classification}
 sources: []
@@ -277,6 +285,17 @@ ${evidenceLines}
 
 ## Alternatives & Recommendation
 - **Recommendation:** Review evidence and approve or reject via \`thienlabs approve --task ${brief.doc_id}\`.
+
+## GitHub Approval Controls
+- **Visible phase marker:** [FERRY:DIRECTOR-APPROVAL] (GitHub label: phase:director-approval)
+- **Workflow phase:** director-approval
+- **Approval ID:** ${aprId}
+- **Approval marker:** ${approvalTag}
+- **Required labels:** phase:director-approval, approval:required
+- **PR title:** Keep the repository's Conventional Commit format; place approval metadata in the PR body, not the title.
+- **Approve comment:** /approve ${aprId} or APPROVED: ${aprId}
+- **Reject comment:** /reject ${aprId} or REJECTED: ${aprId}
+- A GitHub APPROVED review counts only when submitted by the repository owner on this exact tagged item while approval:required is present.
 
 ## Director Decision
 - **Status:** pending

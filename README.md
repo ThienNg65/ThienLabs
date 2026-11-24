@@ -30,3 +30,4 @@ projects/
 1. Start with [organization/chief-of-staff.md](organization/chief-of-staff.md) as the primary conversational orchestrator.
 2. All project lookups follow [organization/governance/security-policy.md](organization/governance/security-policy.md) (registry → project context → authoritative map → scoped search).
 3. Level 3 actions (PR merges, releases, scope shifts, security changes, spending) require explicit Director sign-off via [organization/templates/approval-request.md](organization/templates/approval-request.md).
+4. Review [docs/approval-automation.md](docs/approval-automation.md) for phase labels, approval commands, event routing, and runner setup.

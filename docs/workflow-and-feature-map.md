@@ -32,6 +32,18 @@ Canonical reference for agents and operators interacting with the `thienlabs` ru
 | `retry` | Classify transient failure (`provider\|tool\|permission\|context\|ambiguity`) | `--brief`, `--failure-class`, `--summary` | Records `retried` or `escalated` at `retry_count >= 2` |
 | `approve` | Record Director decision on a paused Level 3 task | `--task`, `--decision`, `--notes` | Updates `APR-*.md` + appends `approved` / `rejected` |
 | `status` | Inspect latest task states in `runtime/ledger.jsonl` | `--project`, `--task` | JSON array of latest `LedgerEvent` per task |
+| `simulate` | Run isolated end-to-end outer-loop multi-agent simulation | `--project`, `--json` | JSON report `{ ok, scenarios[] }` (exit `0`/`1`) |
+
+## GitHub Approval & Phase Automation
+
+| Workflow | Trigger | Outcome |
+|---|---|---|
+| `phase-tags.yml` | Issue/PR opened, edited, reopened, synchronized | Converts Workflow phase body metadata or optional `[FERRY:<PHASE>]` issue tags into `phase:<phase>` labels; APR marker adds `approval:required` |
+| `director-approval.yml` | Director comment or submitted PR review | Verifies repository-owner identity, exact APR ID, and pending label; records decision and emits a `repository_dispatch` event |
+| `agent-event-bridge.yml` | `repository_dispatch` for a task or Director decision | Uploads a durable event manifest and forwards to the configured agent runner; otherwise leaves it queued |
+| `ferry-daily-audit.yml` | Daily at 08:00 Asia/Ho_Chi_Minh or manual dispatch | Creates/reuses a repository-wide Ferry audit issue and dispatches a task event |
+
+**Comment commands:** `/approve APR-<TASK-ID>`, `APPROVED: APR-<TASK-ID>`, `/reject APR-<TASK-ID>`, `REJECTED: APR-<TASK-ID>`. Plain `approved` is deliberately insufficient. PR titles remain Conventional Commit compliant; the phase is shown by labels.
 
 ## Canonical Task & Approval Statechart
 
@@ -55,11 +67,11 @@ stateDiagram-v2
     retried --> retried : "retry (< 2)"
     retried --> escalated : "retries >= 2"
 
-    paused_for_approval --> approved : "thienlabs approve --decision approved"
-    paused_for_approval --> rejected : "thienlabs approve --decision rejected"
+    paused_for_approval --> approved : "thienlabs approve / Director GitHub signature"
+    paused_for_approval --> rejected : "thienlabs reject / Director GitHub signature"
 
+    approved --> dispatched : "resume next phase after approval"
     completed --> [*]
-    approved --> [*]
     rejected --> [*]
     blocked --> [*]
     escalated --> [*]

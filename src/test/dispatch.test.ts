@@ -91,10 +91,21 @@ describe('Antigravity dispatch -> complete -> approve lifecycle', () => {
       });
       assert.equal(appr.status, 'approved');
 
+      // An explicit Director approval releases the gate and resumes the next phase.
+      const resumed = dispatchTask({ rootDir: tmp, briefPath: briefRel });
+      assert.equal(resumed.task_id, 'TASK-DEMO-001');
+      assert.equal(resumed.owner, 'demo-prd-lead');
+      const finished = completeTask({
+        rootDir: tmp,
+        briefPath: briefRel,
+        result: { status: 'completed', summary: 'Post-approval phase completed', evidence: ['verification passed'] },
+      });
+      assert.equal(finished.status, 'completed');
+
       const events = readLedger(getLedgerPath(tmp));
       assert.deepEqual(
         events.map((e) => e.status),
-        ['dispatched', 'paused_for_approval', 'approved'],
+        ['dispatched', 'paused_for_approval', 'approved', 'dispatched', 'completed'],
       );
     } finally {
       fs.rmSync(tmp, { recursive: true, force: true });

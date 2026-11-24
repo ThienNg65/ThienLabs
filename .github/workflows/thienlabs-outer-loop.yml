@@ -1,0 +1,66 @@
+name: ThienLabs Outer-Loop Simulation
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  outer-loop-simulation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ThienLabs
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --registry=https://registry.npmjs.org
+
+      - name: Run inner-loop gates
+        run: |
+          npm run typecheck
+          npm test
+          npm run validate
+
+      - name: Run isolated Ferry outer-loop simulation
+        run: node dist/cli.js simulate --project ferry --json | tee simulation-report.json
+
+      - name: Upload simulation artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: outer-loop-simulation-report
+          path: simulation-report.json
+
+      - name: Open regression issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: openIssues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'outer-loop-regression',
+            });
+            if (openIssues.length > 0) {
+              console.log('Existing open outer-loop-regression issue found:', openIssues[0].number);
+              return;
+            }
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[Outer-Loop] Multi-agent simulation regression detected',
+              labels: ['outer-loop-regression'],
+              body: `Automated outer-loop simulation failed on \`${context.ref}\`.\n\n- **Workflow Run:** ${runUrl}\n- **Commit:** \`${context.sha}\``,
+            });
