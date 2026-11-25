@@ -5,13 +5,13 @@ department: development
 doc_type: approval-request
 requested_by: ferry-eng-lead
 related_task_id: TASK-FERRY-012
-status: pending
+status: approved
 workflow_phase: director-approval
 origin_phase: implementation
 github_approval_marker: "[TL-APR:APR-TASK-FERRY-012]"
 required_labels:
   - phase:director-approval
-  - approval:required
+  - approval:approved
 version: "1.0"
 access_classification: private-engineering
 sources:
@@ -51,6 +51,6 @@ updated_at: "2026-11-25"
 - A GitHub `APPROVED` review counts only when submitted by the Director on this explicitly tagged item while `approval:required` is present.
 
 ## Director Decision
-- **Status:** pending
-- **Decision timestamp:** pending
-- **Notes:** Awaiting Windows CI pass on `ThienNg65/ferry` PR and Director review.
+- **Status:** approved
+- **Decision timestamp:** 2026-11-25T07:40:45Z
+- **Notes:** Approved by `@ThienNg65` via `APPROVED: APR-TASK-FERRY-012` on `ThienNg65/ThienLabs#17`.
