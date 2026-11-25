@@ -6,7 +6,7 @@ doc_type: task-brief
 owner: ferry-eng-lead
 created_by: org-chief-of-staff
 parent_task_id: null
-status: active
+status: approved
 priority: low
 hop_count: 1
 max_hops: 4
@@ -45,8 +45,8 @@ The root `VERSION` file remained at `0.14.15` while `package.json`, `package-loc
 ## Expected Deliverables & Acceptance Criteria
 - [x] `VERSION` updated to `1.4.0` matching `package.json`, `package-lock.json`, `neutralino.config.json`, and `.release-please-manifest.json`.
 - [x] Automated drift check added in `.github/scripts/version-alignment.test.mjs`.
-- [ ] PR opened in `ThienNg65/ferry` and Windows CI (`verify`) passes.
-- [ ] Level 3 Director approval (`APR-TASK-FERRY-012`) recorded before merge.
+- [x] PR opened in `ThienNg65/ferry` and Windows CI (`verify`) passes.
+- [x] Level 3 Director approval (`APR-TASK-FERRY-012`) recorded before merge.
 
 ## Required Evidence
 - Local run of `node --test .github/scripts/version-alignment.test.mjs` (1/1 passed).
