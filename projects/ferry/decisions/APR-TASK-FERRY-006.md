@@ -5,7 +5,7 @@ department: marketing
 doc_type: approval-request
 requested_by: ferry-mkt-lead
 related_task_id: TASK-FERRY-006
-status: pending
+status: approved
 workflow_phase: director-approval
 origin_phase: implementation
 github_approval_marker: "[TL-APR:APR-TASK-FERRY-006]"
@@ -18,7 +18,7 @@ sources:
   - projects/ferry/marketing/TASK-FERRY-006-align-public-privacy-policy.md
 supersedes: null
 created_at: "2026-11-24"
-updated_at: "2026-11-24"
+updated_at: "2026-11-25"
 ---
 
 # Director Approval Request: Align Public `ferry-release` Privacy Policy (`TASK-FERRY-006`)
@@ -34,7 +34,7 @@ updated_at: "2026-11-24"
 
 ## Validation Evidence
 - Verified `PRIVACY.md` content against `ThienNg65/ferry-website/app/pages/privacy.vue` (v1.1) and `ThienNg65/ferry-release/README.md`.
-- `ThienLabs` CI (`validate-and-test`) pending on governance PR creation.
+- `ThienLabs` CI (`validate-and-test`, `sync-phase`) passed.
 
 ## Rollback Plan
 - Revert commit `4d5a8402b82d82cb506a59ddba819420df6a3b74` in `ThienNg65/ferry-release` (`main` if merged).
@@ -51,6 +51,6 @@ updated_at: "2026-11-24"
 - A GitHub `APPROVED` review counts only when submitted by the Director on this explicitly tagged item while `approval:required` is present.
 
 ## Director Decision
-- **Status:** pending
-- **Decision timestamp:** pending
-- **Notes:** Awaiting Director review on `ThienNg65/ferry-release#6` and matching `ThienLabs` PR.
+- **Status:** approved
+- **Decision timestamp:** 2026-11-25T01:52:51Z
+- **Notes:** Approved by @ThienNg65 via `APPROVED: APR-TASK-FERRY-006` on `ThienNg65/ferry-release#6` (2026-11-25T01:52:14Z) and `APPROVED: APR-TASK-FERRY-006` on `ThienNg65/ThienLabs#11` (2026-11-25T01:52:51Z). Ready for manual merge (not auto-merged).

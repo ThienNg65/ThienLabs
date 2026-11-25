@@ -6,7 +6,7 @@ doc_type: task-brief
 owner: ferry-mkt-lead
 created_by: org-chief-of-staff
 parent_task_id: null
-status: active
+status: approved
 priority: high
 hop_count: 1
 max_hops: 4
@@ -21,7 +21,7 @@ sources:
   - https://github.com/ThienNg65/ferry-release/pull/6
 supersedes: null
 created_at: "2026-11-24"
-updated_at: "2026-11-24"
+updated_at: "2026-11-25"
 target_date: "2026-11-24"
 ---
 
@@ -48,7 +48,7 @@ target_date: "2026-11-24"
 - [x] Licensing wording matches `ferry-release/README.md` and `https://www.ferryssh.com/terms`.
 - [x] Policy Version `1.1` (`2026-11-23`) and `ferryssh.com` Vercel Web Analytics disclosure match `ferry-website/app/pages/privacy.vue`.
 - [x] PR opened in `ThienNg65/ferry-release` (`https://github.com/ThienNg65/ferry-release/pull/6`).
-- [ ] Level 3 Director approval (`APR-TASK-FERRY-006`) recorded before merge.
+- [x] Level 3 Director approval (`APR-TASK-FERRY-006`) recorded before merge.
 
 ## Required Evidence
 - `ThienNg65/ferry-release` PR #6 (`4d5a8402b82d82cb506a59ddba819420df6a3b74`).
