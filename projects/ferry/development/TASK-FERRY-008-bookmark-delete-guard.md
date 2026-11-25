@@ -6,7 +6,7 @@ doc_type: task-brief
 owner: ferry-eng-lead
 created_by: org-chief-of-staff
 parent_task_id: null
-status: active
+status: approved
 priority: low
 hop_count: 1
 max_hops: 4
@@ -30,7 +30,7 @@ target_date: "2026-11-25"
 
 ## Scope
 - **Included:**
-  - `ThienNg65/ferry` branch `fix/208-bookmark-delete-for-site-guard`:
+  - `ThienNg65/ferry` branch `fix/208-bookmark-delete-for-site-guard` (`https://github.com/ThienNg65/ferry/pull/210`, commit `95d34d12c21cece3f3b52d982c472123d81a7bbd`):
     - `src/main/bookmarks/BookmarkStore.ts`: use `this.list().filter(...)` in `deleteForSite()`.
     - `src/main/bookmarks/BookmarkStore.test.ts`: add regression test for non-array `bookmarks` in `deleteForSite()`.
 - **Excluded:**
@@ -43,12 +43,12 @@ target_date: "2026-11-25"
 ## Expected Deliverables & Acceptance Criteria
 - [x] `BookmarkStore.deleteForSite()` uses `this.list()` instead of raw `this.store.get('bookmarks')`.
 - [x] Regression test added in `src/main/bookmarks/BookmarkStore.test.ts`.
-- [ ] PR opened in `ThienNg65/ferry` and Windows CI (`verify`) passes.
-- [ ] Level 3 Director approval (`APR-TASK-FERRY-008`) recorded before merge.
+- [x] PR opened in `ThienNg65/ferry` (`https://github.com/ThienNg65/ferry/pull/210`) and Windows CI (`verify`) passes.
+- [x] Level 3 Director approval (`APR-TASK-FERRY-008`) recorded before merge.
 
 ## Required Evidence
-- `ThienNg65/ferry` PR on branch `fix/208-bookmark-delete-for-site-guard` + Windows CI run.
-- `ThienLabs` `validate-and-test` CI check on the matching governance PR.
+- `ThienNg65/ferry` PR #210 (`95d34d12c21cece3f3b52d982c472123d81a7bbd`) — all 6 CI checks passed.
+- `ThienLabs` `validate-and-test` CI check on `ThienNg65/ThienLabs#13` — passed.
 
 ## Workflow Phase & Visibility
 - **Current phase:** `director-approval`
