@@ -6,7 +6,7 @@ doc_type: task-brief
 owner: ferry-eng-lead
 created_by: org-chief-of-staff
 parent_task_id: null
-status: active
+status: approved
 priority: low
 hop_count: 1
 max_hops: 4
@@ -22,7 +22,7 @@ sources:
   - .github/scripts/node-version-alignment.test.mjs
 supersedes: null
 created_at: "2026-11-24"
-updated_at: "2026-11-24"
+updated_at: "2026-11-25"
 target_date: "2026-11-24"
 ---
 
@@ -52,12 +52,12 @@ Ferry's locked development dependencies (`abbrev@5.0.0` and `nopt@10.0.1` via `@
 - [x] `package.json` `engines.node` set to `>=22.22.2` and `CLAUDE.md` updated.
 - [x] Regression test `.github/scripts/node-version-alignment.test.mjs` added.
 - [x] PR opened in `ThienNg65/ferry` (`https://github.com/ThienNg65/ferry/pull/190`).
-- [ ] Windows CI (`ci.yml`) passes on PR #190 without `EBADENGINE` warnings.
-- [ ] Level 3 Director approval (`APR-TASK-FERRY-004`) recorded before merge.
+- [x] Windows CI (`ci.yml`) passes on PR #190 without `EBADENGINE` warnings.
+- [x] Level 3 Director approval (`APR-TASK-FERRY-004`) recorded before merge.
 
 ## Required Evidence
 - Scratch run of `node --test` on `node-version-alignment.test.mjs` and `release-token-scope.test.mjs`: 7/7 passed.
-- Pending: Windows CI run on `https://github.com/ThienNg65/ferry/pull/190` (`fe97ef439e82b17584bc1c24fe97ef43f6936fa4`).
+- Windows CI (`verify` + 5 checks) passed on `https://github.com/ThienNg65/ferry/pull/190` (`fe97ef439e82b17584bc1c24fe97ef43f6936fa4`).
 
 ## Workflow Phase & Visibility
 - **Current phase:** `director-approval`

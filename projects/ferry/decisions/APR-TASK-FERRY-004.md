@@ -5,7 +5,7 @@ department: development
 doc_type: approval-request
 requested_by: ferry-eng-lead
 related_task_id: TASK-FERRY-004
-status: pending
+status: approved
 workflow_phase: director-approval
 origin_phase: implementation
 github_approval_marker: "[TL-APR:APR-TASK-FERRY-004]"
@@ -18,7 +18,7 @@ sources:
   - projects/ferry/development/TASK-FERRY-004-align-ci-node-version.md
 supersedes: null
 created_at: "2026-11-24"
-updated_at: "2026-11-24"
+updated_at: "2026-11-25"
 ---
 
 # Director Approval Request: Align Ferry CI & Release Node.js Version (`TASK-FERRY-004`)
@@ -34,7 +34,7 @@ updated_at: "2026-11-24"
 
 ## Validation Evidence
 - Scratch verification of `.github/scripts/node-version-alignment.test.mjs` and `.github/scripts/release-token-scope.test.mjs` against staged edits: 7/7 passed.
-- Windows CI (`ci.yml`) on `ThienNg65/ferry` PR #190 (`fe97ef439e82b17584bc1c24fe97ef43f6936fa4`): pending at PR creation.
+- Windows CI (`verify`, `CodeQL`, `Analyze (actions)`, `Analyze (javascript-typescript)`, `conventional-title`, `sync-phase`) on `ThienNg65/ferry` PR #190 (`fe97ef439e82b17584bc1c24fe97ef43f6936fa4`): all 6 checks passed.
 
 ## Rollback Plan
 - Revert commit `fe97ef439e82b17584bc1c24fe97ef43f6936fa4` on `ThienNg65/ferry` (`main` if merged) to restore `22.14.0`.
@@ -51,6 +51,6 @@ updated_at: "2026-11-24"
 - A GitHub `APPROVED` review counts only when submitted by the Director on this explicitly tagged item while `approval:required` is present.
 
 ## Director Decision
-- **Status:** pending
-- **Decision timestamp:** pending
-- **Notes:** Awaiting Windows CI pass on `ThienNg65/ferry#190` and Director review.
+- **Status:** approved
+- **Decision timestamp:** 2026-11-25T01:52:35Z
+- **Notes:** Approved by @ThienNg65 via `/approve APR-TASK-FERRY-004` on `ThienNg65/ferry#190` (2026-11-25T01:51:31Z) and `APPROVED: APR-TASK-FERRY-004` on `ThienNg65/ThienLabs#7` (2026-11-25T01:52:35Z). Ready for manual merge (not auto-merged).
