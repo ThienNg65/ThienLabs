@@ -6,7 +6,7 @@ doc_type: task-brief
 owner: ferry-eng-lead
 created_by: org-chief-of-staff
 parent_task_id: null
-status: active
+status: approved
 priority: medium
 hop_count: 1
 max_hops: 4
@@ -30,7 +30,7 @@ Unlike `RemoteShell.mkdirRecursive()`, `RemoteShell.deleteRecursive()` used a ba
 
 ## Scope
 - **Included:**
-  - `ThienNg65/ferry` branch `fix/217-delete-recursive-rethrow`:
+  - `ThienNg65/ferry` branch `fix/217-delete-recursive-rethrow` (`https://github.com/ThienNg65/ferry/pull/218`, commit `1d96841a8d4d1ff118b04b9edbd15a8162a50ea9`):
     - `src/main/ssh/RemoteShell.ts`: catch `(e)` and rethrow `SshError` when `e.code === 'CANCELLED' || e.code === 'SSH_TIMEOUT'`, matching `mkdirRecursive()`.
     - `src/main/ssh/RemoteShell.test.ts`: add unit tests verifying `SSH_TIMEOUT` and `CANCELLED` rethrow without invoking `deleteRecursiveSftp`, while non-timeout/non-cancel exec errors still fall back.
 - **Excluded:**
@@ -43,12 +43,12 @@ Unlike `RemoteShell.mkdirRecursive()`, `RemoteShell.deleteRecursive()` used a ba
 ## Expected Deliverables & Acceptance Criteria
 - [x] `RemoteShell.deleteRecursive()` rethrows `SSH_TIMEOUT` and `CANCELLED` `SshError`s.
 - [x] Unit tests added in `src/main/ssh/RemoteShell.test.ts`.
-- [ ] PR opened in `ThienNg65/ferry` and Windows CI (`verify`) passes.
-- [ ] Level 3 Director approval (`APR-TASK-FERRY-009`) recorded before merge.
+- [x] PR opened in `ThienNg65/ferry` (`https://github.com/ThienNg65/ferry/pull/218`) and Windows CI (`verify`) passes.
+- [x] Level 3 Director approval (`APR-TASK-FERRY-009`) recorded before merge.
 
 ## Required Evidence
-- `ThienNg65/ferry` PR on branch `fix/217-delete-recursive-rethrow` + Windows CI run.
-- `ThienLabs` `validate-and-test` CI check on the matching governance PR.
+- `ThienNg65/ferry` PR #218 (`1d96841a8d4d1ff118b04b9edbd15a8162a50ea9`) — all 6 CI checks passed.
+- `ThienLabs` `validate-and-test` CI check on `ThienNg65/ThienLabs#14` — passed.
 
 ## Workflow Phase & Visibility
 - **Current phase:** `director-approval`
