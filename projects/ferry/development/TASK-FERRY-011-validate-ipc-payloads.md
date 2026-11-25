@@ -6,7 +6,7 @@ doc_type: task-brief
 owner: ferry-eng-lead
 created_by: org-chief-of-staff
 parent_task_id: null
-status: active
+status: approved
 priority: medium
 hop_count: 1
 max_hops: 4
@@ -35,7 +35,7 @@ target_date: "2026-11-25"
 
 ## Scope
 - **Included:**
-  - `ThienNg65/ferry` branch `fix/207-validate-ipc-payloads`:
+  - `ThienNg65/ferry` branch `fix/207-validate-ipc-payloads` (`https://github.com/ThienNg65/ferry/pull/229`, commit `523f68d176f780b9bdb1af180dc5abea5577cfe4`):
     - `src/main/ipc/validation.ts`: export `failValidation()`.
     - `src/main/ipc/history.ipc.ts`: validate `query` object, `status`, `search`, and positive integer `limit`.
     - `src/main/ipc/operations.ipc.ts`: validate `operationId` via `requireNonEmptyString()`.
@@ -51,12 +51,12 @@ target_date: "2026-11-25"
 ## Expected Deliverables & Acceptance Criteria
 - [x] `history:list`, `operation:cancel`, and `window:syncTheme` validate incoming payloads and reject with `VALIDATION`.
 - [x] Unit tests added across `history.ipc.test.ts`, `operations.ipc.test.ts`, and `window.ipc.test.ts`.
-- [ ] PR opened in `ThienNg65/ferry` and Windows CI (`verify`) passes.
-- [ ] Level 3 Director approval (`APR-TASK-FERRY-011`) recorded before merge.
+- [x] PR opened in `ThienNg65/ferry` (`https://github.com/ThienNg65/ferry/pull/229`) and Windows CI (`verify`) passes.
+- [x] Level 3 Director approval (`APR-TASK-FERRY-011`) recorded before merge.
 
 ## Required Evidence
-- `ThienNg65/ferry` PR on branch `fix/207-validate-ipc-payloads` + Windows CI run.
-- `ThienLabs` `validate-and-test` CI check on the matching governance PR.
+- `ThienNg65/ferry` PR #229 (`523f68d176f780b9bdb1af180dc5abea5577cfe4`) — all 6 CI checks passed.
+- `ThienLabs` `validate-and-test` CI check on `ThienNg65/ThienLabs#16` — passed.
 
 ## Workflow Phase & Visibility
 - **Current phase:** `director-approval`
