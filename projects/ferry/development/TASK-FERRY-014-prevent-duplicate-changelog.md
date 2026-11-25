@@ -17,7 +17,6 @@ access_classification: private-engineering
 sources:
   - .github/scripts/check-changelog-duplicates.mjs
   - .github/scripts/check-changelog-duplicates.test.mjs
-  - .github/workflows/ci.yml
 supersedes: null
 created_at: "2026-11-25"
 updated_at: "2026-11-25"
@@ -33,8 +32,7 @@ target_date: "2026-11-25"
 - **Included:**
   - `ThienNg65/ferry` branch `fix/172-prevent-duplicate-changelog`:
     - `.github/scripts/check-changelog-duplicates.mjs`: add automated duplicate-entry detector (`findDuplicateChangelogEntries`) checking normalized subjects and duplicate PR references in the latest release section of `CHANGELOG.md`.
-    - `.github/scripts/check-changelog-duplicates.test.mjs`: add unit tests covering subject normalization, merge-commit duplicate detection, duplicate PR-number detection, and repository `CHANGELOG.md`.
-    - `.github/workflows/ci.yml`: run `node .github/scripts/check-changelog-duplicates.mjs` in `verify`.
+    - `.github/scripts/check-changelog-duplicates.test.mjs`: add unit tests covering subject normalization, merge-commit duplicate detection, duplicate PR-number detection, and repository `CHANGELOG.md` (executed automatically by `ci.yml` via `node --test .github/scripts/*.test.mjs`).
 - **Excluded:**
   - `ThienNg65/ferry-release`, `ThienNg65/ferry-website`, rewriting historical `1.3.2`/`1.3.3` `CHANGELOG.md` entries, and merging without Level 3 Director approval.
 
@@ -44,12 +42,12 @@ target_date: "2026-11-25"
 
 ## Expected Deliverables & Acceptance Criteria
 - [x] `.github/scripts/check-changelog-duplicates.mjs` and `.github/scripts/check-changelog-duplicates.test.mjs` added and passing.
-- [x] `.github/workflows/ci.yml` executes the duplicate-changelog check in `verify`.
+- [x] Existing `ci.yml` `node --test .github/scripts/*.test.mjs` step executes the duplicate-changelog check on every PR.
 - [ ] PR opened in `ThienNg65/ferry` and Windows CI (`verify`) passes.
 - [ ] Level 3 Director approval (`APR-TASK-FERRY-014`) recorded before merge.
 
 ## Required Evidence
-- Local run of `node --test .github/scripts/*.test.mjs` and `node .github/scripts/check-changelog-duplicates.mjs`.
+- Local run of `node --test .github/scripts/check-changelog-duplicates.test.mjs` (4/4 passed) and `node .github/scripts/check-changelog-duplicates.mjs`.
 - `ThienNg65/ferry` PR on branch `fix/172-prevent-duplicate-changelog` + Windows CI run.
 - `ThienLabs` `validate-and-test` CI check on the matching governance PR.
 

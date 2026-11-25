@@ -25,15 +25,15 @@ updated_at: "2026-11-25"
 
 ## Proposed Action & Exact Scope
 - **Action type:** PR merge (Level 3 Director Approval)
-- **Target:** `ThienNg65/ferry` branch `fix/172-prevent-duplicate-changelog` (`.github/scripts/check-changelog-duplicates.mjs`, `.github/scripts/check-changelog-duplicates.test.mjs`, `.github/workflows/ci.yml`) and matching `ThienNg65/ThienLabs` governance record ([TASK-FERRY-014-prevent-duplicate-changelog.md](../development/TASK-FERRY-014-prevent-duplicate-changelog.md)).
-- **Reason:** Resolve `ThienNg65/ferry#172` by adding an automated CI check and unit tests that detect duplicate changelog entries (by normalized subject or PR number) in the latest release section of `CHANGELOG.md`.
+- **Target:** `ThienNg65/ferry` branch `fix/172-prevent-duplicate-changelog` (`.github/scripts/check-changelog-duplicates.mjs`, `.github/scripts/check-changelog-duplicates.test.mjs`) and matching `ThienNg65/ThienLabs` governance record ([TASK-FERRY-014-prevent-duplicate-changelog.md](../development/TASK-FERRY-014-prevent-duplicate-changelog.md)).
+- **Reason:** Resolve `ThienNg65/ferry#172` by adding an automated duplicate-changelog detector and unit tests (run via `ci.yml`'s `node --test .github/scripts/*.test.mjs` step) that catch duplicate changelog entries by normalized subject or PR number in the latest release section of `CHANGELOG.md`.
 
 ## Expected Impact & Risks
 - Prevents duplicate Release Please changelog entries from passing CI before release.
 - Low risk: pure Node.js script with zero external dependencies, scoped to the latest release section so historical `1.3.2`/`1.3.3` entries do not block CI.
 
 ## Validation Evidence
-- Executed `node --test .github/scripts/*.test.mjs` and `node .github/scripts/check-changelog-duplicates.mjs` locally: all passed.
+- Executed `node --test .github/scripts/check-changelog-duplicates.test.mjs` (4/4 passed) and `node .github/scripts/check-changelog-duplicates.mjs` locally.
 - Windows CI (`verify`) on `ThienNg65/ferry` PR and `ThienLabs` `validate-and-test` CI pending on PR creation.
 
 ## Rollback Plan
