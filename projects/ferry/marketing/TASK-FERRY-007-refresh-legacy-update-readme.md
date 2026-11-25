@@ -6,7 +6,7 @@ doc_type: task-brief
 owner: ferry-mkt-lead
 created_by: org-chief-of-staff
 parent_task_id: null
-status: active
+status: approved
 priority: low
 hop_count: 1
 max_hops: 4
@@ -30,7 +30,7 @@ target_date: "2026-11-25"
 
 ## Scope
 - **Included:**
-  - `ThienNg65/ferry-release` branch `docs/refresh-legacy-update-guidance` (`README.md` legacy upgrade `<details>` block).
+  - `ThienNg65/ferry-release` branch `docs/refresh-legacy-update-guidance` (`https://github.com/ThienNg65/ferry-release/pull/7`, commit `7bbb267c07441193a61372134cdd3f4d5f521e5f`).
 - **Excluded:**
   - Any `private-engineering` files, links, or automated release-workflow changes, and merging without Level 3 Director approval.
 
@@ -41,12 +41,12 @@ target_date: "2026-11-25"
 ## Expected Deliverables & Acceptance Criteria
 - [x] `README.md` no longer tells users that `v0.18.1` is the required current bridge version.
 - [x] Canonical download and update channels (`ThienNg65/ferry-release` and Microsoft Store) are documented with a manual fallback.
-- [ ] PR opened in `ThienNg65/ferry-release` (`docs/refresh-legacy-update-guidance`) and reviewed.
-- [ ] Level 3 Director approval (`APR-TASK-FERRY-007`) recorded before merge.
+- [x] PR opened in `ThienNg65/ferry-release` (`https://github.com/ThienNg65/ferry-release/pull/7`).
+- [x] Level 3 Director approval (`APR-TASK-FERRY-007`) recorded before merge.
 
 ## Required Evidence
-- `ThienNg65/ferry-release` PR on `docs/refresh-legacy-update-guidance`.
-- `ThienLabs` `validate-and-test` CI check on the matching governance PR.
+- `ThienNg65/ferry-release` PR #7 (`7bbb267c07441193a61372134cdd3f4d5f521e5f`).
+- `ThienLabs` `validate-and-test` CI check on `ThienNg65/ThienLabs#12`.
 
 ## Workflow Phase & Visibility
 - **Current phase:** `director-approval`
