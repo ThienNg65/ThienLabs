@@ -6,7 +6,7 @@ doc_type: task-brief
 owner: ferry-eng-lead
 created_by: org-chief-of-staff
 parent_task_id: null
-status: active
+status: approved
 priority: medium
 hop_count: 1
 max_hops: 4
@@ -30,7 +30,7 @@ target_date: "2026-11-25"
 
 ## Scope
 - **Included:**
-  - `ThienNg65/ferry` branch `fix/220-sites-backup-validation-error`:
+  - `ThienNg65/ferry` branch `fix/220-sites-backup-validation-error` (`https://github.com/ThienNg65/ferry/pull/222`, commit `a27df71a66f96478064512909d5878d8e2066702`):
     - `src/main/sites/sitesBackup.ts`: throw `SshError('VALIDATION', ...)` from `parseSitesBackup()`.
     - `src/main/ipc/sites.ipc.test.ts`: add unit tests verifying `sites:importJson` rejects invalid JSON and malformed site fields with `IpcErrorCode` `'VALIDATION'` and preserves the specific `parseSitesBackup()` message.
 - **Excluded:**
@@ -43,12 +43,12 @@ target_date: "2026-11-25"
 ## Expected Deliverables & Acceptance Criteria
 - [x] `parseSitesBackup()` throws `SshError('VALIDATION', ...)` for invalid JSON, schema errors, and per-site validation errors.
 - [x] Regression test added in `src/main/ipc/sites.ipc.test.ts`.
-- [ ] PR opened in `ThienNg65/ferry` and Windows CI (`verify`) passes.
-- [ ] Level 3 Director approval (`APR-TASK-FERRY-010`) recorded before merge.
+- [x] PR opened in `ThienNg65/ferry` (`https://github.com/ThienNg65/ferry/pull/222`) and Windows CI (`verify`) passes.
+- [x] Level 3 Director approval (`APR-TASK-FERRY-010`) recorded before merge.
 
 ## Required Evidence
-- `ThienNg65/ferry` PR on branch `fix/220-sites-backup-validation-error` + Windows CI run.
-- `ThienLabs` `validate-and-test` CI check on the matching governance PR.
+- `ThienNg65/ferry` PR #222 (`a27df71a66f96478064512909d5878d8e2066702`) — all 6 CI checks passed.
+- `ThienLabs` `validate-and-test` CI check on `ThienNg65/ThienLabs#15` — passed.
 
 ## Workflow Phase & Visibility
 - **Current phase:** `director-approval`
